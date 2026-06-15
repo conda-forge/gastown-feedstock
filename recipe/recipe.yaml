@@ -15,7 +15,7 @@ source:
     target_directory: library_licenses_2/github.com/go-localereader
 
 build:
-  number: 0
+  number: 1
   script:
     # upstream ref: https://github.com/gastownhall/gastown/blob/main/Makefile
     # NOTE: we must use the old `steveyegge/gastown` GitHub owner-repo specifier for variables set via LDFLAGS since the code still references it and doesn't recognize `gastownhall/gastown`
