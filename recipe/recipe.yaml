@@ -23,9 +23,9 @@ build:
       then:
         - BUILD_TIME="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
         - SHORT_COMMIT_HASH="$(curl -s "https://api.github.com/repos/gastownhall/gastown/commits/v${{ version }}" | jq -r '.sha' | cut -c 1-7)"
-        - go build -v -trimpath -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -o="$PREFIX"/bin/gt ./cmd/gt
-        - go build -v -trimpath -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -o="$PREFIX"/bin/gt-proxy-client ./cmd/gt-proxy-client
-        - go build -v -trimpath -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -o="$PREFIX"/bin/gt-proxy-server ./cmd/gt-proxy-server
+        - go build -o="$PREFIX"/bin/gt -v -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -trimpath ./cmd/gt
+        - go build -o="$PREFIX"/bin/gt-proxy-client -v -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -trimpath ./cmd/gt-proxy-client
+        - go build -o="$PREFIX"/bin/gt-proxy-server -v -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=${BUILD_TIME} -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=${SHORT_COMMIT_HASH} -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -trimpath ./cmd/gt-proxy-server
         # generate shell completions
         - mkdir -p "$PREFIX"/share/bash-completion/completions "$PREFIX"/share/fish/vendor_completions.d "$PREFIX"/share/zsh/site-functions
         - '"$PREFIX"/bin/gt completion bash > "$PREFIX"/share/bash-completion/completions/gt'
@@ -35,8 +35,8 @@ build:
       then:
         - for /f "usebackq delims=" %%T in (`powershell -Command "[DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ')"`) do set BUILD_TIME=%%T
         - for /f "usebackq delims=" %%T in (`powershell -Command "((Invoke-RestMethod 'https://api.github.com/repos/gastownhall/gastown/commits/v${{ version }}').sha).Substring(0, 7)"`) do set SHORT_COMMIT_HASH=%%T
-        - go build -v -trimpath -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=%BUILD_TIME% -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=%SHORT_COMMIT_HASH% -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -o="%LIBRARY_BIN%"\gt.exe ./cmd/gt
-        - go build -v -trimpath -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=%BUILD_TIME% -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=%SHORT_COMMIT_HASH% -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -o="%LIBRARY_BIN%"\gt-proxy-server.exe ./cmd/gt-proxy-server
+        - go build -o="%LIBRARY_BIN%"\gt.exe -v -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=%BUILD_TIME% -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=%SHORT_COMMIT_HASH% -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -trimpath ./cmd/gt
+        - go build -o="%LIBRARY_BIN%"\gt-proxy-server.exe -v -ldflags="-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=%BUILD_TIME% -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=%SHORT_COMMIT_HASH% -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}" -trimpath ./cmd/gt-proxy-server
         # generate shell completions
         - mkdir "%LIBRARY_PREFIX%"\share\bash-completion\completions
         - mkdir "%LIBRARY_PREFIX%"\share\fish\vendor_completions.d
@@ -54,6 +54,7 @@ requirements:
 tests:
   - script:
       env:
+        # required for the `gt-proxy-client --help` test to pass without a running `gt-proxy-server` instance, cf. https://github.com/gastownhall/gastown/blob/main/docs/proxy-server.md#gt-proxy-client
         GT_REAL_BIN: bin/gt
       content:
         - gt --help
