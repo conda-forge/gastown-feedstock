@@ -28,13 +28,11 @@ build:
         -o=($prefix)/bin/
         -v
         -ldflags=$'-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=($build_time) -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=($short_commit_hash) -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}'
-        -trimpath
         ./cmd/gt
       - go build
         -o=($prefix)/bin/
         -v
         -ldflags=$'-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=($build_time) -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=($short_commit_hash) -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}'
-        -trimpath
         ./cmd/gt-proxy-server
       - if: unix
         then:
@@ -42,7 +40,6 @@ build:
             -o=($prefix)/bin/
             -v
             -ldflags=$'-s -w -X github.com/steveyegge/gastown/internal/cmd.Build=conda-forge -X github.com/steveyegge/gastown/internal/cmd.BuildTime=($build_time) -X github.com/steveyegge/gastown/internal/cmd.BuiltProperly=1 -X github.com/steveyegge/gastown/internal/cmd.Commit=($short_commit_hash) -X github.com/steveyegge/gastown/internal/cmd.Version=${{ version }}'
-            -trimpath
             ./cmd/gt-proxy-client
       - go-licenses save ./cmd/gt ./cmd/gt-proxy-client ./cmd/gt-proxy-server
         --save_path=library_licenses
@@ -53,11 +50,9 @@ build:
       # generate shell completions
       - if: build_platform == host_platform
         then:
-          - mkdir ($prefix)/share/bash-completion/completions ($prefix)/share/fish/vendor_completions.d ($prefix)/share/zsh/site-functions
-          - let bin = ($prefix)/bin/gt
-          - ^$bin completion bash | save ($prefix)/share/bash-completion/completions/gt
-          - ^$bin completion fish | save ($prefix)/share/fish/vendor_completions.d/gt.fish
-          - ^$bin completion zsh  | save ($prefix)/share/zsh/site-functions/_gt
+          - ^gt completion bash | save --force ($prefix)/share/bash-completion/completions/gt
+          - ^gt completion fish | save --force ($prefix)/share/fish/vendor_completions.d/gt.fish
+          - ^gt completion zsh  | save --force ($prefix)/share/zsh/site-functions/_gt
 
 requirements:
   build:
